@@ -6,7 +6,13 @@ class RedisStore():
         print "{0}".format(self.db)
 
     def get(self, key):
-        return self.db.get(key)
+        ret = self.db.get(key)
+        if ret is None:
+            ret = []
+            if key[-1] == '/':
+                for child in self.db.scan_iter(key + '*'):
+                    ret.append(child[len(key):])
+        return ret
 
     def put(self, key, value):
         return self.db.set(key, value)
