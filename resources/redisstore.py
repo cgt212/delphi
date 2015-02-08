@@ -1,8 +1,9 @@
 from redis import Redis
 
 class RedisStore():
-    def __init__(self):
-        self.db = Redis('localhost')
+    def __init__(self, **kwargs):
+        self.db = Redis(**kwargs)
+        print "{0}".format(self.db)
 
     def get(self, key):
         return self.db.get(key)

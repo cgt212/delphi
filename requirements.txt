@@ -1,0 +1,5 @@
+configobj
+flask
+flask-redis
+redis
+netaddr
