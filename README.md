@@ -25,39 +25,39 @@ curl -X PUT http://localhost:5000/dns/domain -d 'data={ "value": "whatbroke.com"
 Now get some values back out:
 
 Using the same source (127.0.0.1):
-<code>
+<pre><code>
 curl localhost:5000/dns/
 ['domain', 'resolver']
-</code>
+</code></pre>
 
 Using the other source (192.168.0.0):
-<code>
+<pre><code>
 curl 192.168.1.4:5000/dns/
 []
-</code>
+</code></pre>
 
 Getting the actual value back:
-<code>
+<pre><code>
 curl localhost:5000/dns/resolver
 192.168.1.1
-</code>
+</code></pre>
 
 From the other source:
-<code>
+<pre><code>
 curl 192.168.1.4:5000/dns/resolver
 []
-</code>
+</code></pre>
 
 Add a value into the intranet backend:
-<code>
+<pre><code>
 curl -X PUT http://192.168.1.4:5000/dns/resolver -d 'data={ "value": "192.168.1.2" }'
 192.168.1.2
-</code>
+</code></pre>
 
 Now there are 2 different values depending on the source:
-<code>
+<pre><code>
 curl http://localhost:5000/dns/resolver
 192.168.1.1
 curl http://192.168.1.4:5000/dns/resolver
 192.168.1.2
-</code>
+</code></pre>
