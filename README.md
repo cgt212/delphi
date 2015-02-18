@@ -5,4 +5,59 @@ Generic key value store, currently backed by a Redis database.  The primary purp
 environments be handled specific to that environment.  The initial idea for this came to have a single source of truth for 
 multiple environments.  
 
+<hr />
 
+# Dependencies
+
+The most current list of dependencies will be in the requirements.txt file included in the source.
+
+# Examples
+
+Using the sample configuration, there is a backend for the local (127.0.0.0/8) subnet and a different backend for the intranet subnet (192.168.0.0/16).  
+
+Run the app ./app.py
+
+Put some values into the backend:
+
+curl -X PUT http://localhost:5000/dns/resolver -d 'data={ "value": "192.168.1.1" }'
+curl -X PUT http://localhost:5000/dns/domain -d 'data={ "value": "whatbroke.com" }'
+
+Now get some values back out:
+
+Using the same source (127.0.0.1):
+<code>
+curl localhost:5000/dns/
+['domain', 'resolver']
+</code>
+
+Using the other source (192.168.0.0):
+<code>
+curl 192.168.1.4:5000/dns/
+[]
+</code>
+
+Getting the actual value back:
+<code>
+curl localhost:5000/dns/resolver
+192.168.1.1
+</code>
+
+From the other source:
+<code>
+curl 192.168.1.4:5000/dns/resolver
+[]
+</code>
+
+Add a value into the intranet backend:
+<code>
+curl -X PUT http://192.168.1.4:5000/dns/resolver -d 'data={ "value": "192.168.1.2" }'
+192.168.1.2
+</code>
+
+Now there are 2 different values depending on the source:
+<code>
+curl http://localhost:5000/dns/resolver
+192.168.1.1
+curl http://192.168.1.4:5000/dns/resolver
+192.168.1.2
+</code>
